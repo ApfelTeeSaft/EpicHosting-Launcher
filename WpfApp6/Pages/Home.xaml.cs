@@ -1,12 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using LauncherApplicationV2.Services;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using WpfApp6.Services;
 using WpfApp6.Services.Launch;
+using WpfApp6;
+using SevenZip.Compression.LZ;
+using System.Threading.Tasks;
 
 namespace WpfApp6.Pages
 {
@@ -74,6 +79,7 @@ namespace WpfApp6.Pages
         {
             try
             {
+                Window mainWindow = Window.GetWindow(this);
                 string path69 = UpdateINI.ReadValue("Auth", "Path");
                 if (path69 != "NONE")
                 {
@@ -89,11 +95,21 @@ namespace WpfApp6.Pages
                         }
 
                         WebClient OMG = new WebClient();
-                        OMG.DownloadFile("https://cdn.discordapp.com/attachments/1122256554331226122/1178432513304166593/Curl.dll?ex=65761fcd&is=6563aacd&hm=20cde775a5dd544aaf51d26769db297ed521947583a499b83bfd165a1ae7846b&", Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "GFSDK_Aftermath_Lib.x64.dll")); //replace with your curl
-                        // OMG.DownloadFile("https://cdn.discordapp.com/attachments/1122256554331226122/1178425958802403481/pakchunk6004-WindowsClient.pak?ex=657619b2&is=6563a4b2&hm=2798fa5f264b97743f880b415b4d655a8aac9780c014ae806e10d07fe63b6aa4&", Path.Combine(path69, "FortniteGame\\Content\\Paks", "pakchunk6004-WindowsClient.pak")); //replace with custom pak (current one is for 7.30 i made as a test
-                        // OMG. DownloadFile("https://cdn.discordapp.com/attachments/1122256554331226122/1178425959427342386/pakchunk6004-WindowsClient.sig?ex=657619b2&is=6563a4b2&hm=8a3174b67c5dc8388f9c3c808452a7126fe7efb617a6dfc118b2598866caa3ed&", Path.Combine(path69, "FortniteGame\\Content\\Paks", "pakchunk6004-WindowsClient.sig")); //replace with sig (current one is for 7.30 i made as a test)
+                        string dllPath = Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "Cobalt.dll");
+                        string consolePath = Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "Console.dll");
+                        string memoryPath = Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "MemFixer.dll");
+                        OMG.DownloadFile("https://apfelteesaft.com/cdn/epiccobalt", Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "Cobalt.dll")); //replace with your curl
+                        OMG.DownloadFile("https://apfelteesaft.com/cdn/epicconsole", Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "Console.dll")); //replace with your curl
+                        OMG.DownloadFile("https://apfelteesaft.com/cdn/MemoryLeakFixer", Path.Combine(path69, "Engine\\Binaries\\ThirdParty\\NVIDIA\\NVaftermath\\Win64", "MemFixer.dll")); //replace with your curl
 
-                        PSBasics.Start(path69, "-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=h1cdhchd10150221h130eB56 -skippatchcheck", UpdateINI.ReadValue("Auth", "Email"), UpdateINI.ReadValue("Auth", "Password"));
+                        mainWindow.WindowState = WindowState.Minimized;
+
+                        int processId = PSBasics.Start(path69, "-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=h1cdhchd10150221h130eB56 -skippatchcheck", UpdateINI.ReadValue("Auth", "Email"), UpdateINI.ReadValue("Auth", "Password"));
+                        Thread.Sleep(10000);
+                        Injector.Inject(processId, dllPath);
+                        Injector.Inject(processId, memoryPath);
+                        Thread.Sleep(15000);
+                        Injector.Inject(processId, consolePath);
 
                         FakeAC.Start(path69, "FortniteClient-Win64-Shipping_BE.exe", $"-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=h1cdhchd10150221h130eB56 -skippatchcheck", "r");
                         FakeAC.Start(path69, "FortniteLauncher.exe", $"-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=h1cdhchd10150221h130eB56 -skippatchcheck", "dsf");
@@ -109,11 +125,13 @@ namespace WpfApp6.Pages
                         }
                         catch (Exception ex)
                         {
+                            mainWindow.WindowState = WindowState.Normal;
                             MessageBox.Show("There has been an error closing");
                         }
                     }
                     else
                     {
+                        mainWindow.WindowState = WindowState.Normal;
                         MessageBox.Show("Error!");
                     }
                 }
