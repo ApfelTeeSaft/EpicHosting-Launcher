@@ -11,6 +11,7 @@ using ModernWpf.Media.Animation;
 using System.Net.NetworkInformation;
 using System.IO;
 using WpfApp6.Services;
+using WpfApp6.Pages;
 
 namespace WpfApp6
 {
@@ -18,23 +19,24 @@ namespace WpfApp6
     {
         Home home = new Home();
         Settings settings = new Settings();
-        // Downloader download;
+        Downloader download;
         Loading loading = new Loading();
         AnnouncementsPage announcementsPage = new AnnouncementsPage(); // Add AnnouncementsPage instance
-        // DownloadStateService downloadStateService = new DownloadStateService(); // Create a singleton instance of DownloadStateService
+        DownloadStateService downloadStateService = new DownloadStateService(); // Create a singleton instance of DownloadStateService
 
         public MainWindow()
         {
             InitializeComponent();
 
             // Create a singleton instance of DownloadStateService and add it to App resources
-            // downloadStateService = new DownloadStateService();
-            // App.Current.Resources["DownloadStateService"] = downloadStateService;
+            downloadStateService = new DownloadStateService();
+            App.Current.Resources["DownloadStateService"] = downloadStateService;
 
             ContentFrame.Navigate(loading);
 
             // Check server status and Version
-            // CheckServerStatusAndVersion();
+            
+            CheckServerStatusAndVersion();
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
@@ -77,8 +79,8 @@ namespace WpfApp6
                         else if (item.Tag.ToString() == "Downloader")
                         {
                             // Provide the existing singleton instance of DownloadStateService
-                            // download = new Downloader();
-                            // ContentFrame.Navigate(download);
+                            download = new Downloader();
+                            ContentFrame.Navigate(download);
                         }
                         else if (item.Tag.ToString() == "Announcements")
                         {
@@ -97,21 +99,38 @@ namespace WpfApp6
                 // Check version
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/check"); //replace with your actual server ip
+                    HttpResponseMessage response = await client.GetAsync("http://26.158.133.248:5000/api/check"); //replace with your actual server ip
+                    HttpResponseMessage versionResponse = await client.GetAsync("http://26.158.133.248:5000/api/version");
 
                     if (response.IsSuccessStatusCode)
                     {
+                        string jsonString = await versionResponse.Content.ReadAsStringAsync();
+
+                        // Parse the JSON string
+                        var json = System.Text.Json.JsonDocument.Parse(jsonString);
+                        var version = json.RootElement.GetProperty("version").GetString();
+
+                        if (version.Equals("0.3", StringComparison.InvariantCulture))
+                        {
+                            // Continue with the rest of the code
+                            ContentFrame.Navigate(home);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Please Update The Launcher to {version}\nVisit the Discord!");
+                            Close();
+                        }
                     }
                     else
                     {
-                        MessageBox.Show($"Server returned non-success status code: {response.StatusCode}");
+                        MessageBox.Show($"Please connect the the epichosting radmin server!\r\nUser : epichosting\r\nPassword : epichosting \r\n", "Radmin not Detected! ", MessageBoxButton.OK, MessageBoxImage.Error);
                         Close();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"Please connect the the epichosting radmin server!\r\nUser : epichosting\r\nPassword : epichosting \r\n", "Radmin not Detected! ", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
         }
