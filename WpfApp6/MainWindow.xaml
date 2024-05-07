@@ -7,8 +7,8 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" x:Class="WpfApp6.MainWindow"
     mc:Ignorable="d"
-    Title="Launcher" Height="613" Width="908"
-    ui:WindowHelper.UseModernWindowStyle="True" ResizeMode="NoResize">
+    Title="Epic Hosting" Height="513" Width="908"
+    ui:WindowHelper.UseModernWindowStyle="True" ResizeMode="NoResize" Background="#272C14">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="315*"/>
@@ -16,9 +16,12 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="481*"/>
         </Grid.ColumnDefinitions>
-        <ui:NavigationView x:Name="NavView" Loaded="NavView_Loaded" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" IsPaneToggleButtonVisible="False" IsPaneOpen="True" HorizontalAlignment="Left" Width="898" Grid.ColumnSpan="4">
+        <ui:NavigationView x:Name="NavView" Loaded="NavView_Loaded" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" IsPaneToggleButtonVisible="False" IsPaneOpen="True" HorizontalAlignment="Left" Width="898" Grid.ColumnSpan="4" Background="#272C14">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Icon="Play" Content="Home" Tag="Home"/>
+                <ui:NavigationViewItem Icon="Download" Content="Download" Tag="Downloader"/>
+                <!-- Add the Announcements item -->
+                <ui:NavigationViewItem Icon="Important" Content="Announcements" Tag="Announcements"/>
             </ui:NavigationView.MenuItems>
         </ui:NavigationView>
         <ui:Frame x:Name="ContentFrame" Margin="330,10,10,10" Grid.ColumnSpan="4">
