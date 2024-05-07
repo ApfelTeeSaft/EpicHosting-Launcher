@@ -20,7 +20,7 @@ namespace WpfApp6.Pages
         {
             try
             {
-                string apiUrl = "http://127.0.0.1:5000/api/announcements"; //replace with actual server url
+                string apiUrl = "http://26.158.133.248:5000/api/announcements"; //replace with actual server url
                 using (HttpClient client = new HttpClient())
                 {
                     string jsonResult = await client.GetStringAsync(apiUrl);
