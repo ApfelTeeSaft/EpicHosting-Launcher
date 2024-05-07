@@ -1,42 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LauncherApplicationV2.Services;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using WpfApp6.Services.Launch;
 
-namespace WpfApp6.Services.Launch
+namespace LauncherApplicationV2.Services
 {
     public static class PSBasics
     {
         public static Process _FortniteProcess;
 
-        public static int Start(string PATH, string args, string Email, string Password)
+        public static int Start(string PATH, string args, string Email, string Exchange)
         {
-            if (Email == null || Password == null)
+            if (Exchange == null)
             {
-                MessageBox.Show("Sorry Make Sure You Put Your Project - STW Logins");
-                return -1; // Return -1 to indicate an error
+                MessageBox.Show("Sorry, make sure you put your Lunar Login");
+                Application.Current.Shutdown();
             }
 
             if (File.Exists(Path.Combine(PATH, "FortniteGame\\Binaries\\Win64\\", "FortniteClient-Win64-Shipping.exe")))
             {
-                PSBasics._FortniteProcess = new Process()
+                if (_FortniteProcess != null && !_FortniteProcess.HasExited)
+                {
+                    // Fortnite process is already running, return the existing process ID
+                    return _FortniteProcess.Id;
+                }
+
+                _FortniteProcess = new Process()
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        Arguments = $"-AUTH_LOGIN={Email} -AUTH_PASSWORD={Password} -AUTH_TYPE=epic " + args,
+                        Arguments = $"-AUTH_LOGIN={Email} -AUTH_PASSWORD={Exchange} -AUTH_TYPE=epic " + args,
                         FileName = Path.Combine(PATH, "FortniteGame\\Binaries\\Win64\\", "FortniteClient-Win64-Shipping.exe")
                     },
                     EnableRaisingEvents = true
                 };
 
-                PSBasics._FortniteProcess.Exited += new EventHandler(PSBasics.OnFortniteExit);
-                PSBasics._FortniteProcess.Start();
+                _FortniteProcess.Exited += new EventHandler(OnFortniteExit);
+                _FortniteProcess.Start();
 
-                return PSBasics._FortniteProcess.Id; // Return the process ID
+                return _FortniteProcess?.Id ?? -1; // Return the process ID if available, otherwise -1
             }
 
             return -1; // Return -1 if the file does not exist
@@ -44,10 +48,10 @@ namespace WpfApp6.Services.Launch
 
         public static void OnFortniteExit(object sender, EventArgs e)
         {
-            Process fortniteProcess = PSBasics._FortniteProcess;
+            Process fortniteProcess = _FortniteProcess;
             if (fortniteProcess != null && fortniteProcess.HasExited)
             {
-                PSBasics._FortniteProcess = null;
+                _FortniteProcess = null;
             }
             FakeAC._FNLauncherProcess?.Kill();
             FakeAC._FNAntiCheatProcess?.Kill();
