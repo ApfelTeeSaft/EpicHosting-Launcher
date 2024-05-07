@@ -29,6 +29,8 @@ namespace WpfApp6.Pages
 
             // Subscribe to progress changes
             downloadStateService.ProgressChanged += UpdateProgressBar;
+            // Update visibility of download button based on initial download state
+            UpdateDownloadButtonVisibility();
         }
 
         private async void Button1_Click(object sender, RoutedEventArgs e)
@@ -41,10 +43,12 @@ namespace WpfApp6.Pages
                 if (result == DialogResult.OK)
                 {
                     string downloadPath = folderBrowserDialog.SelectedPath;
-                    string apiUrl = "http://127.0.0.1:5000/api/download"; // Replace with your API endpoint
+                    string apiUrl = "http://26.158.133.248:5000/api/download"; // Replace with your API endpoint
 
                     // Set the flag indicating that download is in progress
                     downloadStateService.IsDownloadInProgress = true;
+                    UpdateDownloadState();
+                    DownloadButton.Visibility = Visibility.Hidden;
 
                     try
                     {
@@ -66,6 +70,7 @@ namespace WpfApp6.Pages
 
                         // For simplicity, I'll just show a message box
                         System.Windows.MessageBox.Show("File downloaded and extracted successfully!");
+                        DownloadButton.Visibility = Visibility.Visible;
                     }
                     catch (OperationCanceledException)
                     {
@@ -84,17 +89,20 @@ namespace WpfApp6.Pages
                     catch (Exception ex)
                     {
                         System.Windows.MessageBox.Show($"Error: {ex.Message}");
+                        DownloadButton.Visibility = Visibility.Visible;
                     }
                     finally
                     {
                         // Reset the flag indicating that download is no longer in progress
                         downloadStateService.IsDownloadInProgress = false;
+                        UpdateDownloadState();
                     }
                 }
             }
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show($"Error: {ex.Message}");
+                DownloadButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -344,6 +352,24 @@ namespace WpfApp6.Pages
 
             // Set the visibility state of the CancelButton in the service to false
             downloadStateService.IsCancelButtonVisible = false;
+        }
+
+        private void UpdateDownloadButtonVisibility()
+        {
+            if (downloadStateService.IsDownloadInProgress)
+            {
+                DownloadButton.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                DownloadButton.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void UpdateDownloadState()
+        {
+            // Update the visibility of the download button based on the download state
+            UpdateDownloadButtonVisibility();
         }
     }
 }
