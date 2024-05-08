@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Media;
 using WpfApp6.Pages;
 using ModernWpf.Media.Animation;
 using System.Net.NetworkInformation;
@@ -29,6 +30,7 @@ namespace WpfApp6
             InitializeComponent();
 
             // Create a singleton instance of DownloadStateService and add it to App resources
+            // NavView.Background = new SolidColorBrush(Colors.Blue);
             downloadStateService = new DownloadStateService();
             App.Current.Resources["DownloadStateService"] = downloadStateService;
 

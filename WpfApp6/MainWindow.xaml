@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     Title="Epic Hosting" Height="513" Width="908"
     ui:WindowHelper.UseModernWindowStyle="True" ResizeMode="NoResize" Background="#272C14">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="315*"/>
@@ -16,13 +17,19 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="481*"/>
         </Grid.ColumnDefinitions>
-        <ui:NavigationView x:Name="NavView" Loaded="NavView_Loaded" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" IsPaneToggleButtonVisible="False" IsPaneOpen="True" HorizontalAlignment="Left" Width="898" Grid.ColumnSpan="4" Background="#272C14">
+        <ui:NavigationView x:Name="NavView" Loaded="NavView_Loaded" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" IsPaneToggleButtonVisible="False" IsPaneOpen="True" HorizontalAlignment="Left" Width="898" Grid.ColumnSpan="4">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Icon="Play" Content="Home" Tag="Home"/>
+                <ui:NavigationViewItem Icon="Play" Content="Home" Tag="Home" Foreground="Aqua"/>
                 <ui:NavigationViewItem Icon="Download" Content="Download" Tag="Downloader"/>
                 <!-- Add the Announcements item -->
                 <ui:NavigationViewItem Icon="Important" Content="Announcements" Tag="Announcements"/>
             </ui:NavigationView.MenuItems>
+            <ui:NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#20353F" Opacity="0.2"/>
+                <!--<SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#20353F" Opacity="0.2"/>-->
+                <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="#20353F" Opacity="0.2"/>
+                <ImageBrush x:Key="NavigationViewExpandedPaneBackground" ImageSource="/dev.jpg" Opacity="0.1"/>
+            </ui:NavigationView.Resources>
         </ui:NavigationView>
         <ui:Frame x:Name="ContentFrame" Margin="330,10,10,10" Grid.ColumnSpan="4">
             <ui:Frame.ContentTransitions >
