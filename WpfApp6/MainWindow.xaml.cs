@@ -12,12 +12,13 @@ using ModernWpf.Media.Animation;
 using System.Net.NetworkInformation;
 using System.IO;
 using WpfApp6.Services;
-using WpfApp6.Pages;
+using Launcher.Windows;
 
 namespace WpfApp6
 {
     public partial class MainWindow : Window
     {
+        // fakeLogin fakeLogin = new fakeLogin();
         Home home = new Home();
         Settings settings = new Settings();
         Downloader download;
@@ -27,6 +28,7 @@ namespace WpfApp6
 
         public MainWindow()
         {
+            // fakeLogin.Activate();
             InitializeComponent();
 
             // Create a singleton instance of DownloadStateService and add it to App resources
