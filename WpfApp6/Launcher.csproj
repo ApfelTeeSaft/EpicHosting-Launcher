@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="dev.jpg" />
+    <None Remove="Fonts\Burbank-Big-Condensed-Black.ttf" />
     <None Remove="Pages\82b12ac249fbb223299e6a234b87b948.png" />
     <None Remove="Pages\CloudArrow.png" />
     <None Remove="Ressources\dev.jpg" />
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <Resource Include="dev.jpg" />
+    <Resource Include="Fonts\Burbank-Big-Condensed-Black.ttf" />
     <Resource Include="Pages\82b12ac249fbb223299e6a234b87b948.png" />
     <Resource Include="Pages\CloudArrow.png" />
     <Resource Include="Ressources\dev.jpg" />
