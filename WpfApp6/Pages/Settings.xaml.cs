@@ -73,8 +73,6 @@ namespace WpfApp6.Pages
             string email = EmailBox.Text;
             string password = PasswordBox.Password;
             string path = PathBox.Text;
-            UpdateINI.WriteToConfig("Auth", "Email", EmailBox.Text);
-            UpdateINI.WriteToConfig("Auth", "Password", PasswordBox.Password);
             UpdateINI.WriteToConfig("Auth", "Path", PathBox.Text);
             var data = new
             {
